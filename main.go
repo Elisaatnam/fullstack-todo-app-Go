@@ -7,16 +7,21 @@ import (
 	"slices"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/google/uuid"
 )
 
 type Todo struct {
-	ID int `json:"id"`
+	ID string `json:"id"`
 	Completed bool `json:"completed"`
 	Body string `json:"body"`
 }
 
+func GenerateUUID() string {
+    id := uuid.New()
+    return id.String()
+}
+
 func main() {
-	fmt.Println("Hello, world!!!")
 	app := fiber.New()
 
 	todos := []Todo{}
@@ -36,7 +41,8 @@ func main() {
 			return c.Status(400).JSON(fiber.Map{"error": "Body is required"})
 		}
 
-		todo.ID = len(todos) + 1
+
+		todo.ID = GenerateUUID()
 		todos = append(todos, *todo)
 
 		return c.Status(200).JSON(todo)
